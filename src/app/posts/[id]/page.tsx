@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import type { PostWithContentDto } from "@/app/type/post";
+import { apiFetch } from "@/app/lib/backend/client";
 
 export default function Page({ params }: { params: Promise<{ id: number }> }) {
   const { id } = useParams<{ id: string }>();
@@ -10,9 +11,7 @@ export default function Page({ params }: { params: Promise<{ id: number }> }) {
   const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/v1/posts/${id}`)
-      .then((res) => res.json())
-      .then(setPost);
+    apiFetch(`/api/v1/posts/${id}`).then(setPost);
   }, []);
 
   if (post == null) return <div>로딩중...</div>;

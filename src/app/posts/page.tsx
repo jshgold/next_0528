@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { PostDto } from "@/app/type/post";
+import { apiFetch } from "../lib/backend/client";
 
 import Link from "next/link";
 
@@ -9,10 +10,7 @@ export default function Page() {
   const [posts, setPosts] = useState<PostDto[]>([]);
   const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   useEffect(() => {
-    fetch(`${NEXT_PUBLIC_API_BASE_URL}/api/v1/posts`)
-      .then((res) => res.json())
-      // .then((data) => setPosts(data));
-      .then(setPosts);
+    apiFetch(`/api/v1/posts`).then(setPosts);
   }, []);
 
   return (
