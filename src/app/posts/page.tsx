@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PostDto } from "@/app/type/post";
+
+import Link from "next/link";
 
 export default function Page() {
-  // const [posts, setPosts] = useState<{ [key: string]: any }[]>([]);
-  const [posts, setPosts] = useState<{ id: number; title: string }[]>([]);
+  const [posts, setPosts] = useState<PostDto[]>([]);
 
   useEffect(() => {
     fetch("http://localhost:8080/api/v1/posts")
@@ -21,7 +23,9 @@ export default function Page() {
 
       <ul>
         {posts.map((post) => (
-          <li key={post.id}>{post.title}</li>
+          <li key={post.id}>
+            <Link href={`/posts/${post.id}`}>{post.title}</Link>
+          </li>
         ))}
       </ul>
     </>
