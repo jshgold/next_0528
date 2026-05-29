@@ -1,9 +1,22 @@
 "use client";
 
 import { apiFetch } from "@/app/lib/backend/client";
-import { useRouter } from "next/navigation";
+import { PostWithContentDto } from "@/app/type/post";
+import { useRouter, useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+
 
 export default function Page() {
+
+  const { id: idStr } = useParams<{ id: string }>();
+  const id = Number(idStr);
+  const [post, setPost] = useState<PostWithContentDto | null>(null);
+
+  useEffect(() => {
+    apiFetch(`/api/v1/posts/${id}`).then(setPost);
+  }, []);
+
+
   const router = useRouter();
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,8 +46,8 @@ export default function Page() {
       return;
     }
 
-    apiFetch(`/api/v1/posts/create`, {
-      method: "POST",
+    apiFetch(`/api/v1/posts/edit/${id}`, {
+      method: "PUT",
       body: JSON.stringify({
         title: titleInput.value,
         content: contentTextarea.value,
@@ -47,7 +60,7 @@ export default function Page() {
 
   return (
     <>
-      <h1>글쓰기</h1>
+      <h1>글수정</h1>
 
       <form className="flex flex-col gap-2 p-2" onSubmit={handleSubmit}>
         <input
@@ -55,11 +68,13 @@ export default function Page() {
           type="text"
           name="title"
           placeholder="제목"
+          defaultValue= {post?.title}
         />
         <textarea
           className="border p-2 rounded"
           name="content"
           placeholder="내용"
+          defaultValue={post?.content}
         />
         <button className="border p-2 rounded" type="submit">
           저장
